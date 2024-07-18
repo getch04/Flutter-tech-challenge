@@ -4,7 +4,8 @@
 
 Create a simple Flutter application.
 
-![Chat UI](https://dribbble.com/shots/3979005-Chat-App-UI/attachments/10129221?mode=media)
+![b17fc6b9f4246f6ac41de843deef999a](https://github.com/user-attachments/assets/df0294a5-8807-4c39-9a46-abf9844f54d7)
+
 
 Your task is to create a Flutter application that enables real-time messaging between users. The app should have basic features such as sending and receiving messages in real-time, displaying message timestamps, and a user-friendly interface.
 
