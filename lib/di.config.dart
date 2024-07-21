@@ -15,9 +15,11 @@ import 'package:injectable/injectable.dart' as _i2;
 import 'package:merem_chat_app/core/helpers/shared_preference.dart' as _i4;
 import 'package:merem_chat_app/core/helpers/snackbar_helper.dart' as _i3;
 import 'package:merem_chat_app/core/state/app_state.dart' as _i5;
-import 'package:merem_chat_app/di.dart' as _i10;
-import 'package:merem_chat_app/src/services/auth_services.dart' as _i8;
-import 'package:merem_chat_app/src/viewmodels/auth_view_model.dart' as _i9;
+import 'package:merem_chat_app/di.dart' as _i12;
+import 'package:merem_chat_app/src/services/auth_service.dart' as _i10;
+import 'package:merem_chat_app/src/services/chat_service.dart' as _i8;
+import 'package:merem_chat_app/src/viewmodels/auth_view_model.dart' as _i11;
+import 'package:merem_chat_app/src/viewmodels/chat_view_model.dart' as _i9;
 
 extension GetItInjectableX on _i1.GetIt {
 // initializes the registration of main-scope dependencies inside of GetIt
@@ -37,12 +39,15 @@ extension GetItInjectableX on _i1.GetIt {
     gh.lazySingleton<_i5.AppState>(() => registerModule.appState);
     gh.lazySingleton<_i6.FirebaseAuth>(() => registerModule.firebaseAuth);
     gh.lazySingleton<_i7.FirebaseFirestore>(() => registerModule.firestore);
-    gh.lazySingleton<_i8.AuthService>(() => _i8.AuthService(
+    gh.lazySingleton<_i8.ChatService>(() => _i8.ChatService());
+    gh.factory<_i9.ChatViewModel>(
+        () => _i9.ChatViewModel(gh<_i8.ChatService>()));
+    gh.lazySingleton<_i10.AuthService>(() => _i10.AuthService(
           gh<_i6.FirebaseAuth>(),
           gh<_i7.FirebaseFirestore>(),
         ));
-    gh.singleton<_i9.AuthViewModel>(() => _i9.AuthViewModel(
-          gh<_i8.AuthService>(),
+    gh.singleton<_i11.AuthViewModel>(() => _i11.AuthViewModel(
+          gh<_i10.AuthService>(),
           gh<_i4.SharedPreferencesService>(),
           gh<_i3.ToastService>(),
         ));
@@ -50,4 +55,4 @@ extension GetItInjectableX on _i1.GetIt {
   }
 }
 
-class _$RegisterModule extends _i10.RegisterModule {}
+class _$RegisterModule extends _i12.RegisterModule {}

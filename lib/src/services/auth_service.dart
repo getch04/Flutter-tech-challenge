@@ -19,7 +19,6 @@ class AuthService {
   }) {
     return TaskEither.tryCatch(
       () async {
-        // Create a new user with email and password
         final UserCredential userCredential =
             await _firebaseAuth.createUserWithEmailAndPassword(
           email: email,
@@ -27,12 +26,17 @@ class AuthService {
         );
         final user = userCredential.user!;
 
-        // Create a new document in the users collection with the uid
         await _firestore.collection('users').doc(user.uid).set({
           'username': username,
           'email': email,
           'createdAt': FieldValue.serverTimestamp(),
         });
+
+        await _firestore.collection('chats').doc(user.uid).set({
+          'users': [user.uid],
+          'createdAt': FieldValue.serverTimestamp(),
+        });
+
         return user;
       },
       (error, _) => error.toString(),

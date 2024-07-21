@@ -21,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
     final authViewModel = context.read<AuthViewModel>();
     final isLoggedIn = await authViewModel.isLoggedIn();
     if (isLoggedIn) {
-      context.router.replace(const HomeRoute());
+      context.router.replace( HomeRoute());
     } else {
       context.router.replace(const LoginRoute());
     }

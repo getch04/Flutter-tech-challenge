@@ -132,7 +132,7 @@ class RegisterPage extends StatelessWidget {
                                                     );
                                                 if (res) {
                                                   context.router.replaceAll([
-                                                    const HomeRoute(),
+                                                     HomeRoute(),
                                                   ]);
                                                 }
                                               },

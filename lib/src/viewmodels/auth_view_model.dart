@@ -4,7 +4,7 @@ import 'package:injectable/injectable.dart';
 import 'package:merem_chat_app/core/helpers/shared_preference.dart';
 import 'package:merem_chat_app/core/helpers/snackbar_helper.dart';
 import 'package:merem_chat_app/core/state/app_state.dart';
-import 'package:merem_chat_app/src/services/auth_services.dart';
+import 'package:merem_chat_app/src/services/auth_service.dart';
 
 @singleton
 class AuthViewModel extends AppState {
