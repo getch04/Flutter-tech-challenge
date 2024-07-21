@@ -9,4 +9,18 @@ class AppState extends ChangeNotifier {
     _isBusy = value;
     notifyListeners();
   }
+
+  showLoader({required BuildContext context}) {
+    Future.delayed(Duration.zero, () {
+      showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return const Center(
+                child: CircularProgressIndicator(
+              color: Colors.white,
+            ));
+          });
+    });
+  }
 }
