@@ -1,9 +1,6 @@
-import 'package:bootstrap_icons/bootstrap_icons.dart';
-import 'package:flutter/material.dart';
-import 'package:merem_chat_app/src/viewmodels/auth_view_model.dart';
-import 'package:merem_chat_app/widgets/extended_text_field.dart';
-import 'package:provider/provider.dart';
+part of auth_view;
 
+@RoutePage()
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
@@ -12,8 +9,6 @@ class LoginPage extends StatelessWidget {
     final theme = Theme.of(context);
     final emailController = TextEditingController();
     final passwordController = TextEditingController();
-
-    final authProvider = Provider.of<AuthViewModel>(context, listen: false);
 
     return Scaffold(
       body: Stack(
@@ -83,7 +78,8 @@ class LoginPage extends StatelessWidget {
                     const SizedBox(height: 20),
                     InkWell(
                       onTap: () {
-                        authProvider.navigateToHome();
+                        // authProvider.navigateToHome();
+                        context.pushRoute(const HomeRoute());
                       },
                       child: Container(
                         height: 55,
@@ -138,7 +134,7 @@ class LoginPage extends StatelessWidget {
                     const SizedBox(height: 150),
                     InkWell(
                       onTap: () {
-                        authProvider.navigateToRegister();
+                        context.pushRoute(const RegisterRoute());
                       },
                       child: const Align(
                         alignment: Alignment.bottomRight,

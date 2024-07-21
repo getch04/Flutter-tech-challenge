@@ -1,8 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:merem_chat_app/src/viewmodels/auth_view_model.dart';
-import 'package:merem_chat_app/widgets/extended_text_field.dart';
-import 'package:provider/provider.dart';
+part of auth_view;
 
+@RoutePage()
 class RegisterPage extends StatelessWidget {
   const RegisterPage({super.key});
 
@@ -14,7 +12,6 @@ class RegisterPage extends StatelessWidget {
     final passwordController = TextEditingController();
     final confirmPasswordController = TextEditingController();
 
-    final provider = Provider.of<AuthViewModel>(context, listen: false);
 
     return Scaffold(
       body: Stack(
@@ -138,7 +135,7 @@ class RegisterPage extends StatelessWidget {
                       alignment: Alignment.bottomRight,
                       child: InkWell(
                         onTap: () {
-                          provider.navigateToLogin();
+                          context.pushRoute(const LoginRoute());
                         },
                         child: const Column(
                           mainAxisAlignment: MainAxisAlignment.end,
