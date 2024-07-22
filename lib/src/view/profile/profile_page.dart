@@ -8,7 +8,6 @@ import 'package:merem_chat_app/core/helpers/shared_preference.dart';
 import 'package:merem_chat_app/di.dart';
 import 'package:merem_chat_app/routes/app_router.dart';
 import 'package:merem_chat_app/src/models/user.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 @RoutePage()
 class ProfilePage extends StatelessWidget {
