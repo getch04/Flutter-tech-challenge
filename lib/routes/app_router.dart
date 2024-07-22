@@ -17,5 +17,6 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: RegisterRoute.page),
         AutoRoute(page: HomeRoute.page),
         AutoRoute(page: ChatDetailRoute.page),
+        AutoRoute(page: ProfileRoute.page),
       ];
 }

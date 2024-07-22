@@ -5,10 +5,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
+import 'package:merem_chat_app/core/helpers/string_extensions.dart';
 import 'package:merem_chat_app/di.dart';
-import 'package:merem_chat_app/src/models/chat.dart';
 import 'package:merem_chat_app/src/models/message.dart';
-import 'package:merem_chat_app/src/models/user.dart';
 import 'package:merem_chat_app/src/viewmodels/chat_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -30,29 +29,42 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return ChangeNotifierProvider(
       create: (context) => getIt<ChatViewModel>()..loadMessages(widget.chatId),
       child: Consumer<ChatViewModel>(
         builder: (context, chatViewModel, child) {
           return Scaffold(
             appBar: AppBar(
-              backgroundColor: Colors.transparent,
-              leading: IconButton(
-                icon: const Icon(
-                  Icons.arrow_back_ios,
-                  color: Colors.black,
+              leadingWidth: 30,
+              flexibleSpace: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [theme.primaryColor, theme.colorScheme.secondary],
+                  ),
                 ),
-                onPressed: () {
-                  context.router.pop();
-                },
+              ),
+              leading: Padding(
+                padding: const EdgeInsets.only(left: 10),
+                child: IconButton(
+                  icon: const Icon(
+                    Icons.arrow_back_ios,
+                  ),
+                  onPressed: () {
+                    context.router.back();
+                  },
+                ),
               ),
               title: Row(
                 children: [
                   CircleAvatar(
                     radius: 20,
-                    backgroundColor: Colors.grey[300],
+                    backgroundColor: const Color.fromARGB(145, 18, 104, 175),
                     child: Text(
-                      widget.username.isNotEmpty ? widget.username[0] : '',
+                      widget.username.isNotEmpty
+                          ? widget.username[0].toTitleCase()
+                          : '',
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -61,8 +73,13 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                   ),
                   const SizedBox(width: 10),
                   Text(
-                    widget.username.isEmpty ? 'Chat' : widget.username,
-                    style: const TextStyle(color: Colors.black),
+                    widget.username.isEmpty
+                        ? 'Chat'
+                        : widget.username.toTitleCase(),
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ],
               ),

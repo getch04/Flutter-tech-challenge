@@ -1,12 +1,14 @@
 // lib/pages/profile_page.dart
 
 import 'package:auto_route/auto_route.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:merem_chat_app/core/helpers/shared_preference.dart';
+import 'package:merem_chat_app/di.dart';
 import 'package:merem_chat_app/routes/app_router.dart';
 import 'package:merem_chat_app/src/models/user.dart';
-import 'package:provider/provider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 @RoutePage()
 class ProfilePage extends StatelessWidget {
@@ -22,9 +24,20 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile'),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [theme.primaryColor, theme.colorScheme.secondary],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+        ),
       ),
       body: FutureBuilder<UserModel>(
         future: getUserDetails(userId),
@@ -46,7 +59,7 @@ class ProfilePage extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     radius: 50,
-                    backgroundColor: Colors.grey[300],
+                    backgroundColor: theme.primaryColor.withOpacity(0.1),
                     child: Text(
                       user.username[0],
                       style: const TextStyle(
@@ -59,34 +72,52 @@ class ProfilePage extends StatelessWidget {
                   const SizedBox(height: 20),
                   Text(
                     user.username,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
+                      color: theme.primaryColor,
                     ),
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    user.username,
+                    user.email,
                     style: const TextStyle(
                       fontSize: 16,
                       color: Colors.grey,
                     ),
                   ),
                   const SizedBox(height: 30),
-                  const Divider(),
+                  const Divider(thickness: 1),
                   const SizedBox(height: 10),
-                  _buildProfileItem('Username', user.username),
+                  _buildProfileItem('Username', user.username, theme),
                   const SizedBox(height: 10),
-                  _buildProfileItem('Email', user.email),
-                  const SizedBox(height: 10),
-                  // _buildProfileItem('Created At', user.createdAt.toString()),
+                  _buildProfileItem('Email', user.email, theme),
                   const SizedBox(height: 30),
-                  ElevatedButton(
+                  ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: theme.primaryColor,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      elevation: 5,
+                      shadowColor: theme.primaryColor.withOpacity(0.5),
+                    ),
                     onPressed: () {
+                      getIt<SharedPreferencesService>().clear();
                       FirebaseAuth.instance.signOut();
-                      context.router.replaceAll([const LoginRoute()]);
+                      context.router.replaceAll([const SplashRoute()]);
                     },
-                    child: const Text('Logout'),
+                    icon: const Icon(Icons.logout),
+                    label: const Text(
+                      'Logout',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -97,26 +128,36 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  Widget _buildProfileItem(String title, String value) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          title,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        Flexible(
-          child: Text(
-            value,
-            style: const TextStyle(
+  Widget _buildProfileItem(String title, String value, ThemeData theme) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+      decoration: BoxDecoration(
+        color: theme.primaryColor.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
               fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: theme.primaryColor,
             ),
           ),
-        ),
-      ],
+          Flexible(
+            child: Text(
+              value,
+              style: const TextStyle(
+                fontSize: 16,
+                color: Colors.black87,
+              ),
+              textAlign: TextAlign.right,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

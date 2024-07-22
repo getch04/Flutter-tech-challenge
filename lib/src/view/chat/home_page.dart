@@ -53,7 +53,9 @@ class HomePage extends StatelessWidget {
                         ),
                       ),
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          context.pushRoute(ProfileRoute(userId: user!.uid));
+                        },
                         icon: const Icon(
                           Icons.menu,
                           size: 36,
