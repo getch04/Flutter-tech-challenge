@@ -1,5 +1,6 @@
 // lib/viewmodels/chat_view_model.dart
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 import 'package:merem_chat_app/src/models/chat.dart';
@@ -19,6 +20,8 @@ class ChatViewModel extends ChangeNotifier {
   List<ChatModel> get chats => _chats;
   List<MessageModel> get messages => _messages;
   List<UserModel> get users => _users;
+
+  final user = FirebaseAuth.instance.currentUser;
 
   Future<void> loadChats(String userId) async {
     _chatService.getChats(userId).listen((chats) {
@@ -52,8 +55,9 @@ class ChatViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> loadUsersExceptCurrent(String userId) async {
-    final users = await _chatService.getUsersExceptCurrent(userId);
+//get users list
+  Future<void> getUsersList() async {
+    final users = await _chatService.getUsersList(user?.uid ?? '');
     _users.clear();
     _users.addAll(users);
     notifyListeners();

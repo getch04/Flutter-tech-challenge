@@ -20,88 +20,93 @@ class HomePage extends StatelessWidget {
 
     return ChangeNotifierProvider(
       create: (context) => getIt<ChatViewModel>()
-        ..loadUsersExceptCurrent(user!.uid)
-        ..loadChats(user.uid),
+        ..getUsersList()
+        ..loadChats(user?.uid ?? ''),
       child: Scaffold(
         body: Consumer<ChatViewModel>(
           builder: (context, chatViewModel, child) {
-            return Container(
-              height: double.infinity,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [theme.primaryColor, theme.colorScheme.secondary],
+            return RefreshIndicator(
+              onRefresh: () async {
+                await chatViewModel.getUsersList();
+              },
+              child: Container(
+                height: double.infinity,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [theme.primaryColor, theme.colorScheme.secondary],
+                  ),
                 ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.only(top: 50),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16.0, vertical: 8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            'Messages',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Quicksand',
-                              fontSize: 30,
-                              color: Colors.white,
-                            ),
-                          ),
-                          IconButton(
-                            onPressed: () {},
-                            icon: const Icon(
-                              Icons.menu,
-                              size: 36,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Text(
-                        'R E C E N T',
-                        style: TextStyle(
-                          color: Colors.white70,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 15),
-                    Expanded(
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(50),
-                            topRight: Radius.circular(50),
-                          ),
-                        ),
-                        child: ListView.builder(
-                          itemCount: chatViewModel.users.length,
-                          itemBuilder: (context, index) {
-                            final user = chatViewModel.users[index];
-
-                            return InkWell(
-                              onTap: () => context.router.push(
-                                ChatDetailRoute(
-                                    chatId: user
-                                        .id), //this is not the right implementation we shold send chat id if they already talk, if not null.
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 50),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16.0, vertical: 8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Messages',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Quicksand',
+                                fontSize: 30,
+                                color: Colors.white,
                               ),
-                              child: _buildChatItem(user, 'No messages yet'),
-                            );
-                          },
+                            ),
+                            IconButton(
+                              onPressed: () {},
+                              icon: const Icon(
+                                Icons.menu,
+                                size: 36,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ),
-                  ],
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Text(
+                          'R E C E N T',
+                          style: TextStyle(
+                            color: Colors.white70,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 15),
+                      Expanded(
+                        child: Container(
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(50),
+                              topRight: Radius.circular(50),
+                            ),
+                          ),
+                          child: ListView.builder(
+                            itemCount: chatViewModel.users.length,
+                            itemBuilder: (context, index) {
+                              final user = chatViewModel.users[index];
+
+                              return InkWell(
+                                onTap: () => context.router.push(
+                                  ChatDetailRoute(
+                                      chatId: user
+                                          .id), //this is not the right implementation we shold send chat id if they already talk, if not null.
+                                ),
+                                child: _buildChatItem(user, 'No messages yet'),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             );

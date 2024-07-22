@@ -4,6 +4,7 @@ import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:merem_chat_app/src/view/auth/auth.dart';
 import 'package:merem_chat_app/src/view/chat/chat_page.dart';
 import 'package:merem_chat_app/src/view/chat/home_page.dart';
+import 'package:merem_chat_app/src/view/profile/profile_page.dart';
 
 part 'app_router.gr.dart';
 

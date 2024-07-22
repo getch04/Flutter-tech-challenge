@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:injectable/injectable.dart';
+import 'package:merem_chat_app/src/models/user.dart';
 
 @lazySingleton
 class AuthService {
@@ -27,15 +28,16 @@ class AuthService {
         final user = userCredential.user!;
 
         await _firestore.collection('users').doc(user.uid).set({
+          'uid': user.uid,
           'username': username,
           'email': email,
           'createdAt': FieldValue.serverTimestamp(),
         });
 
-        await _firestore.collection('chats').doc(user.uid).set({
-          'users': [user.uid],
-          'createdAt': FieldValue.serverTimestamp(),
-        });
+        // await _firestore.collection('chats').doc(user.uid).set({
+        //   'users': [user.uid],
+        //   'createdAt': FieldValue.serverTimestamp(),
+        // });
 
         return user;
       },
