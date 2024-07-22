@@ -21,14 +21,16 @@ class ChatViewModel extends ChangeNotifier {
   List<MessageModel> get messages => _messages;
   List<UserModel> get users => _users;
 
-  final user = FirebaseAuth.instance.currentUser;
-
   Future<void> loadChats(String userId) async {
     _chatService.getChats(userId).listen((chats) {
       _chats.clear();
       _chats.addAll(chats);
       notifyListeners();
     });
+  }
+
+  Stream<List<MessageModel>> getMessageStream(String chatId) {
+    return _chatService.getMessages(chatId);
   }
 
   Future<void> loadMessages(String chatId) async {
@@ -55,11 +57,31 @@ class ChatViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-//get users list
   Future<void> getUsersList() async {
-    final users = await _chatService.getUsersList(user?.uid ?? '');
-    _users.clear();
-    _users.addAll(users);
-    notifyListeners();
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+    if (userId != null) {
+      final users = await _chatService.getUsersList(userId);
+      _users.clear();
+      _users.addAll(users);
+      notifyListeners();
+    }
+  }
+
+  Future<String> getOrCreateChatId(String currentUserId, String peerId) async {
+    String? chatId = await _chatService.getChatId(currentUserId, peerId);
+    if (chatId == null) {
+      await createChat(currentUserId, [peerId]);
+      chatId = await _chatService.getChatId(currentUserId, peerId);
+    }
+    return chatId!;
+  }
+
+  ChatModel? getChatWithUser(String userId) {
+    try {
+      return _chats.firstWhere(
+          (chat) => chat.participants.any((user) => user.id == userId));
+    } catch (e) {
+      return null;
+    }
   }
 }

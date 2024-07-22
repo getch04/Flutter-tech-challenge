@@ -22,6 +22,7 @@ abstract class _$AppRouter extends RootStackRouter {
         child: ChatDetailPage(
           key: args.key,
           chatId: args.chatId,
+          username: args.username,
         ),
       );
     },
@@ -68,12 +69,14 @@ class ChatDetailRoute extends PageRouteInfo<ChatDetailRouteArgs> {
   ChatDetailRoute({
     Key? key,
     required String chatId,
+    required String username,
     List<PageRouteInfo>? children,
   }) : super(
           ChatDetailRoute.name,
           args: ChatDetailRouteArgs(
             key: key,
             chatId: chatId,
+            username: username,
           ),
           initialChildren: children,
         );
@@ -88,15 +91,18 @@ class ChatDetailRouteArgs {
   const ChatDetailRouteArgs({
     this.key,
     required this.chatId,
+    required this.username,
   });
 
   final Key? key;
 
   final String chatId;
 
+  final String username;
+
   @override
   String toString() {
-    return 'ChatDetailRouteArgs{key: $key, chatId: $chatId}';
+    return 'ChatDetailRouteArgs{key: $key, chatId: $chatId, username: $username}';
   }
 }
 

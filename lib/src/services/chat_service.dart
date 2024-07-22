@@ -49,17 +49,6 @@ class ChatService {
     });
   }
 
-  Future<List<UserModel>> getUsersExceptCurrent(String userId) async {
-    final querySnapshot = await _firestore.collection('users').get();
-    List<UserModel> users = [];
-    for (var doc in querySnapshot.docs) {
-      if (doc.id != userId) {
-        users.add(UserModel.fromMap(doc.data(), doc.id));
-      }
-    }
-    return users;
-  }
-
   Stream<List<MessageModel>> getMessages(String chatId) {
     return _firestore
         .collection('chats')
@@ -105,6 +94,22 @@ class ChatService {
     } else {
       print('Chat already exists');
     }
+  }
+
+  Future<String?> getChatId(String userId, String peerId) async {
+    final chatQuery = await _firestore
+        .collection('chats')
+        .where('users', arrayContains: userId)
+        .get();
+
+    for (var doc in chatQuery.docs) {
+      final users = List<String>.from(doc['users']);
+      if (users.contains(peerId) && users.contains(userId)) {
+        return doc.id;
+      }
+    }
+
+    return null;
   }
 
   //get all users except current user
